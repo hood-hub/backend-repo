@@ -41,6 +41,30 @@ const postSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isFlagged: {
+      type: Boolean,
+      default: false,
+    },
+    isFlaggedRemoved: {
+      type: Boolean,
+      default: false,
+    },
+    isFlaggedResolved: {
+      type: Boolean,
+      default: false,
+    },
+    flagReason: {
+      type: String,
+    },
+    flaggedAt: {
+      type: Date,
+    },
+    removedAt: {
+      type: Date,
+    },
+    resolvedAt: {
+      type: Date,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -51,4 +75,5 @@ const postSchema = new mongoose.Schema(
   }
 );
 
+postSchema.index({ geoAddress: "2dsphere" });
 export const PostModel = mongoose.model("post", postSchema);

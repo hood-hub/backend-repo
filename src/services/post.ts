@@ -1,5 +1,10 @@
 import { Types } from "mongoose";
-import { ICreatePost, IPost, IUpdatePost } from "../interfaces/post";
+import {
+  BLACKLISTED_WORDS_FOR_POSTS,
+  ICreatePost,
+  IPost,
+  IUpdatePost,
+} from "../interfaces/post";
 import PostRepository from "../dataAccess/post";
 import ReactionRepository from "../dataAccess/reaction";
 import CommentRepository from "../dataAccess/comment";
@@ -16,13 +21,39 @@ import UserService from "../services/user";
 
 class PostService {
   async create(data: ICreatePost, userId: Types.ObjectId): Promise<IPost> {
+    // Check if post should be flagged.
+    const wordsInPost = data.text.split(/[ ,!.-]+/);
+    console.log("worsInPost:", wordsInPost);
+    const flaggableWords = wordsInPost.filter((word) =>
+      BLACKLISTED_WORDS_FOR_POSTS.includes(word)
+    );
+    console.log("flaggable:", flaggableWords);
+    if (flaggableWords.length > 0) {
+      data.isFlagged = true;
+      data.flaggedAt = new Date();
+      data.flagReason = "Violates Community Rules";
+    }
     data = { ...data, userId };
     let post = await PostRepository.create(data);
+
     return post;
   }
 
   async update(id: Types.ObjectId, data: IUpdatePost): Promise<IPost> {
     let post = await PostRepository.update(id, data);
+    return post;
+  }
+
+  async removeFlaggedPost(
+    id: Types.ObjectId,
+    userId: Types.ObjectId
+  ): Promise<IPost> {
+    let post = await PostRepository.removeFlaggedPost(id, userId);
+    return post;
+  }
+
+  async resolveFlaggedPost(id: Types.ObjectId): Promise<IPost> {
+    let post = await PostRepository.resolveFlaggedPost(id);
     return post;
   }
 
@@ -39,17 +70,81 @@ class PostService {
     return await PostRepository.findOneByUser(userId);
   }
 
-  async getTrending(): Promise<IPost[]> {
-    return await PostRepository.findByLikesAndComments();
+  async getTrending(page: number): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    posts: IPost[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const postsAndCount = await PostRepository.findByLikesAndComments(
+      skip,
+      limit
+    );
+    return {
+      page,
+      totalPages: Math.ceil(postsAndCount.count / limit),
+      ...postsAndCount,
+    };
   }
 
-  async getByUserAddress(userId: Types.ObjectId): Promise<IPost[]> {
+  async getByUserAddress(
+    userId: Types.ObjectId,
+    page: number
+  ): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    posts: IPost[];
+  }> {
     const user = await UserService.getOneUser(userId);
-    return await PostRepository.findByUserAddress(user.geoAddress);
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const postsAndCount = await PostRepository.findByUserAddress(
+      user.geoAddress,
+      skip,
+      limit
+    );
+    return {
+      page,
+      totalPages: Math.ceil(postsAndCount.count / limit),
+      ...postsAndCount,
+    };
   }
 
-  async getAll(): Promise<IPost[]> {
-    return await PostRepository.findAll();
+  async getFlaggedPosts(page: number): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    pendingCount: number;
+    resolvedCount: number;
+    posts: IPost[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const postsAndCount = await PostRepository.findFlaggedPosts(skip, limit);
+    return {
+      page,
+      totalPages: Math.ceil(postsAndCount.count / limit),
+      ...postsAndCount,
+    };
+  }
+
+  async getAll(page: number): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    posts: IPost[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const postsAndCount = await PostRepository.findAll(skip, limit);
+    return {
+      page,
+      totalPages: Math.ceil(postsAndCount.count / limit),
+      ...postsAndCount,
+    };
   }
 
   async likePost(data: ICreateReaction): Promise<void> {

@@ -22,6 +22,9 @@ const groupSchema = new mongoose.Schema(
       required: true,
       default: 1,
     },
+    groupImage: {
+      type: String,
+    },
     groupRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,

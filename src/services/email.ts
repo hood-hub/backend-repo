@@ -1,6 +1,7 @@
 require("dotenv").config;
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import {
+  adminInvitationEmail,
   forgotPasswordEmail,
   resendOTPEmail,
   verifyEmail,
@@ -17,6 +18,17 @@ class EmailService {
     const body = verifyEmail(token, firstName);
     const sender = this.sender;
     const subject = "Verify your account";
+    await this.sendEmail(sender, email, subject, body);
+  }
+
+  public async sendAdminInvitationEmail(
+    email: string,
+    password: string,
+    firstName: string
+  ): Promise<void> {
+    const body = adminInvitationEmail(password, firstName);
+    const sender = this.sender;
+    const subject = "Welcome to The HoodHub Team";
     await this.sendEmail(sender, email, subject, body);
   }
 

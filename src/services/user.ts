@@ -29,12 +29,34 @@ class UserService {
     // const { password, ...returnedUser } = newUser;
 
     // Generate, save and send verification token
-    // const verificationToken = await TokenRepository.create(newUser._id);
-    // await EmailService.sendVerificationEmail(
-    //   newUser.email,
-    //   verificationToken.token,
-    //   newUser!.firstName
-    // );
+    const verificationToken = await TokenRepository.create(newUser._id);
+    await EmailService.sendVerificationEmail(
+      newUser.email,
+      verificationToken.token,
+      newUser!.firstName
+    );
+    return newUser;
+  }
+
+  async createAdmin(data: ICreateUser): Promise<IUserData> {
+    const unhashedPassword = data.password;
+    let user = await UserRepository.findByEmail(data.email);
+    if (user) {
+      ErrorMiddleware.errorHandler("User already exists!", 400);
+    }
+
+    data.password = await this.hashPassword(data.password);
+    data.isAdmin = true;
+    data.isVerified = true;
+    const newUser = await UserRepository.create(data);
+    // const { password, ...returnedUser } = newUser;
+
+    // Send invitation token
+    await EmailService.sendAdminInvitationEmail(
+      newUser.email,
+      unhashedPassword,
+      newUser!.firstName
+    );
     return newUser;
   }
 
@@ -199,6 +221,14 @@ class UserService {
       distance * 1000, // Convert to meters
       user.geoAddress
     );
+  }
+
+  async getAllUsers(): Promise<IUserData[]> {
+    return await UserRepository.findAll();
+  }
+
+  async getAllAdmins(): Promise<IUserData[]> {
+    return await UserRepository.findAllAdmins();
   }
 
   async deletePermanently(id: Types.ObjectId): Promise<IUserData | null> {

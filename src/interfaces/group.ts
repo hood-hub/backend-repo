@@ -6,6 +6,7 @@ export interface ICreateGroup {
   description: string;
   admins: Types.ObjectId[];
   members: Types.ObjectId[];
+  groupImage?: string;
   createdBy: Types.ObjectId;
 }
 
@@ -23,6 +24,7 @@ export interface IGroup extends Document {
   visibility: string;
   noOfMembers: number;
   description: string;
+  groupImage?: string;
   groupRequests?: Types.ObjectId[];
   admins: Types.ObjectId[];
   members: Types.ObjectId[];

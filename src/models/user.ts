@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       minLength: 8,
     },
+    noOfFlags: {
+      type: Number,
+      default: 0,
+    },
     stringAddress: {
       type: String,
     },
@@ -65,11 +69,16 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
+userSchema.index({ geoAddress: "2dsphere" });
 export const UserModel =
   mongoose.models.user || mongoose.model("user", userSchema);

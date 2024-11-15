@@ -39,6 +39,17 @@ class UserRepository {
     ).select("-password");
   }
 
+  async incrementUserNoOfFlags(id: Types.ObjectId): Promise<IUserData | null> {
+    return await UserModel.findByIdAndUpdate(
+      id,
+      { $inc: { noOfFlags: 1 } },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    ).select("-password");
+  }
+
   async changePassword(
     id: Types.ObjectId,
     newPassword: string
@@ -80,6 +91,14 @@ class UserRepository {
     ).select("-password");
   }
 
+  async findAll(): Promise<IUserData[]> {
+    return await UserModel.find({}).select("-password");
+  }
+
+  async findAllAdmins(): Promise<IUserData[]> {
+    return await UserModel.find({ isAdmin: true }).select("-password");
+  }
+
   async findById(id: Types.ObjectId): Promise<IUserData | null> {
     return await UserModel.findById(id).select("-password");
   }
@@ -113,8 +132,7 @@ class UserRepository {
           $maxDistance: distance, // Distance in meters
         },
       },
-      isDeleted: false,
-    }).select("username profilePicture");
+    }).select("_id username profilePicture geoAddress stringAddress");
   }
 
   async deletePermanently(id: Types.ObjectId): Promise<IUser | null> {

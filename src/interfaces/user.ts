@@ -12,6 +12,8 @@ export interface ICreateUser {
   password: string;
   geoAddress?: IPoint;
   stringAddress?: string;
+  isAdmin?: Boolean;
+  isVerified?: Boolean;
 }
 
 export interface IOnboardUser {
@@ -58,6 +60,7 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   isVerified?: Boolean;
+  isAdmin?: Boolean;
 }
 
 // User data without password
@@ -74,6 +77,7 @@ export interface IUserData extends Document {
   createdAt: Date;
   updatedAt: Date;
   isVerified?: Boolean;
+  isAdmin?: Boolean;
 }
 
 export interface IToken extends Document {

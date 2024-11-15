@@ -6,6 +6,7 @@ export default class GroupValidator {
       name: Joi.string().required().min(2),
       visibility: Joi.string().valid("public", "private").required(),
       description: Joi.string().required(),
+      groupImage: Joi.string(),
     });
   }
 
@@ -14,6 +15,7 @@ export default class GroupValidator {
       name: Joi.string().required().min(2),
       visibility: Joi.string().valid("public", "private").required(),
       description: Joi.string().required(),
+      groupImage: Joi.string().required(),
     });
   }
 

@@ -67,6 +67,8 @@ router.get(
   userController.googleLogin
 );
 
+router.get("/get-all", [ValidateLogin, userController.getAllUsers]);
+
 router.get("/get-one-user/:id", [userController.getOneUser]);
 
 router.get("/get-nearby-users/", [
@@ -78,6 +80,15 @@ router.delete("/delete-permanently/:id", [
   ValidateLogin,
   userController.getOneUser,
 ]);
+
+/* ADMINS */
+
+router.post("/admin", [
+  RequestBodyMiddleware.validate(UserValidator.signupAdmin()),
+  userController.signupAdmin,
+]);
+
+router.get("/admin/get-all", [ValidateLogin, userController.getAllAdmins]);
 
 router.get("/logout", [ValidateLogin, userController.logout]);
 

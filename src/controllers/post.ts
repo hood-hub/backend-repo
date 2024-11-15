@@ -47,6 +47,52 @@ export default class PostController {
     }
   }
 
+  async resolveFlaggedPost(req: Request, res: Response): Promise<any> {
+    try {
+      if (!req.params.id) {
+        return res.status(400).json({
+          success: false,
+          message: "Kindly pass post id!",
+        });
+      }
+
+      const post = await PostService.resolveFlaggedPost(
+        req.params.id as unknown as Types.ObjectId
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Post updated successfully!",
+        data: post,
+      });
+    } catch (ex) {
+      console.log(ex);
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async removeFlaggedPost(req: Request, res: Response): Promise<any> {
+    try {
+      if (!req.params.id) {
+        return res.status(400).json({
+          success: false,
+          message: "Kindly pass post id!",
+        });
+      }
+      const post = await PostService.removeFlaggedPost(
+        req.params.id as unknown as Types.ObjectId,
+        req.body.user._id
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Post updated successfully!",
+        data: post,
+      });
+    } catch (ex) {
+      console.log(ex);
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
   async deletePost(req: Request, res: Response): Promise<any> {
     try {
       if (!req.params.id) {
@@ -261,7 +307,8 @@ export default class PostController {
 
   async getTrending(req: Request, res: Response): Promise<any> {
     try {
-      const posts = await PostService.getTrending();
+      const page = req.query.page ? req.query.page : 1;
+      const posts = await PostService.getTrending(page as unknown as number);
       return res.status(200).json({
         success: true,
         message: "Posts retrieved successfully!",
@@ -274,7 +321,27 @@ export default class PostController {
 
   async getByUserAddress(req: Request, res: Response): Promise<any> {
     try {
-      const posts = await PostService.getByUserAddress(req.body.user._id);
+      const page = req.query.page ? req.query.page : 1;
+      const posts = await PostService.getByUserAddress(
+        req.body.user._id,
+        page as unknown as number
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Posts retrieved successfully!",
+        data: posts,
+      });
+    } catch (ex) {
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async getFlaggedPosts(req: Request, res: Response): Promise<any> {
+    try {
+      const page = req.query.page ? req.query.page : 1;
+      const posts = await PostService.getFlaggedPosts(
+        page as unknown as number
+      );
       return res.status(200).json({
         success: true,
         message: "Posts retrieved successfully!",
@@ -287,7 +354,8 @@ export default class PostController {
 
   async getAll(req: Request, res: Response): Promise<any> {
     try {
-      const posts = await PostService.getAll();
+      const page = req.query.page ? req.query.page : 1;
+      const posts = await PostService.getAll(page as unknown as number);
       return res.status(200).json({
         success: true,
         message: "Posts retrieved successfully!",

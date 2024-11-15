@@ -249,7 +249,8 @@ export default class GroupController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const groups = await GroupService.getAllGroups();
+      const page = req.query.page ? req.query.page : 1;
+      const groups = await GroupService.getAllGroups(page as unknown as number);
       return res.status(200).json({
         success: true,
         message: "Groups retrieved successfully!",

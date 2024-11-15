@@ -72,6 +72,18 @@ router.get("/get-by-user-address", [
   postController.getByUserAddress,
 ]);
 
+router.get("/get-flagged", [ValidateLogin, postController.getFlaggedPosts]);
+
+router.put("/resolve-flagged/:id", [
+  ValidateLogin,
+  postController.resolveFlaggedPost,
+]);
+
+router.put("/remove-flagged/:id", [
+  ValidateLogin,
+  postController.removeFlaggedPost,
+]);
+
 router.get("/get-all", [ValidateLogin, postController.getAll]);
 
 export default router;

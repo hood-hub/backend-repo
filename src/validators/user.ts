@@ -10,6 +10,15 @@ export default class UserValidator {
     });
   }
 
+  static signupAdmin() {
+    return Joi.object({
+      firstName: Joi.string().required().min(2),
+      lastName: Joi.string().required().min(2),
+      email: Joi.string().email().required(),
+      password: Joi.string().required().min(8),
+    });
+  }
+
   static onboard() {
     return Joi.object({
       username: Joi.string().min(2),

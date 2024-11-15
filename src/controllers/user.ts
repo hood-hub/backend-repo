@@ -19,6 +19,20 @@ export default class UserController {
     }
   }
 
+  async signupAdmin(req: Request, res: Response): Promise<any> {
+    try {
+      const user = await UserService.createAdmin(req.body);
+      return res.status(201).json({
+        success: true,
+        message: "Email sent successfully!",
+        data: user,
+      });
+    } catch (ex) {
+      console.log(ex);
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
   async onboard(req: Request, res: Response): Promise<any> {
     try {
       if (!req.params.id) {
@@ -227,6 +241,42 @@ export default class UserController {
         success: true,
         message: "Users retrieved successfully!",
         data: users,
+      });
+    } catch (ex) {
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      // const distance = req.query.distance ? Number(req.query.distance) : 20;
+      const users = await UserService.getAllUsers();
+      return res.status(200).json({
+        success: true,
+        message: "Users retrieved successfully!",
+        data: users,
+      });
+    } catch (ex) {
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async getAllAdmins(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      // const distance = req.query.distance ? Number(req.query.distance) : 20;
+      const admins = await UserService.getAllAdmins();
+      return res.status(200).json({
+        success: true,
+        message: "Admins retrieved successfully!",
+        data: admins,
       });
     } catch (ex) {
       ErrorMiddleware.serverError(res, ex);

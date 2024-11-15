@@ -541,7 +541,7 @@ export const verifyEmail = (token: number, firstName: string) => {
                               color: #000000;
                             "
                           >
-                            <p style="font-size: 14px">Hi, ${firstName}</p>
+                            <p style="font-size: 14px">Hi ${firstName},</p>
                           </div>
                         </td>
                       </tr>
@@ -696,7 +696,7 @@ export const verifyEmail = (token: number, firstName: string) => {
     `;
 };
 
-export const forgotPasswordEmail = (token: number, firstName: string) => {
+export const adminInvitationEmail = (password: string, firstName: string) => {
   return `
     <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -908,7 +908,375 @@ export const forgotPasswordEmail = (token: number, firstName: string) => {
                               color: #000000;
                             "
                           >
-                            <p style="font-size: 14px">Hi, ${firstName}</p>
+                            <p style="font-size: 14px">Dear ${firstName},</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          align="center"
+                          style="
+                            font-size: 0px;
+                            padding: 10px 25px;
+                            padding-right: 25px;
+                            padding-left: 25px;
+                            word-break: break-word;
+                          "
+                        >
+                          <div
+                            style="
+                              font-family: open Sans Helvetica, Arial, sans-serif;
+                              font-size: 14px;
+                              line-height: 1;
+                              text-align: center;
+                              color: #000000;
+                            "
+                          >
+                            <div>
+                    We're excited to have you on board! To get started, please use the following default password to log in:
+                            </div>
+                            <h2
+                              style="
+                                font-family: open Sans Helvetica, Arial, sans-serif;
+                                font-size: 18px;
+                                line-height: 1;
+                                text-align: center;
+                                color: #000000;
+                              "
+                            >
+                              Default Password: ${password}
+                            </h2>
+                            <p style="color: grey; font-size: 12px">
+                              Once you've logged in, you can change your password to something more secure. If you have any questions or need assistance, please don't hesitate to reach out to our support team.
+                            </p>
+                            <p style="color: grey; font-size: 12px">
+                              Need help? Contact our support team at support@hoodhub.com
+                            </p>
+                          </div>
+                          <!-- <tr>
+                            <td align="center" style="font-size: 0px; padding: 10px 25px; word-break: break-word">
+                              <div
+                                style="
+                                  font-family: open Sans Helvetica, Arial, sans-serif;
+                                  font-size: 12px;
+                                  font-weight: bold;
+                                  line-height: 1;
+                                  text-align: center;
+                                  color: #000000;
+                                "
+                              ></div>
+                            </td>
+                          </tr>
+                          <div
+                            style="
+                              font-family: open Sans Helvetica, Arial, sans-serif;
+                              font-size: 12px;
+                              line-height: 1;
+                              text-align: center;
+                              color: #000000;
+                            "
+                          >
+                            
+                          </div>
+                        </td>
+                      </tr> -->
+                          <tr>
+                            <td align="center" style="font-size: 0px; padding: 10px 25px; word-break: break-word">
+                              <div
+                                style="
+                                  font-family: open Sans Helvetica, Arial, sans-serif;
+                                  font-size: 12px;
+                                  font-weight: bold;
+                                  line-height: 1;
+                                  text-align: center;
+                                  color: #000000;
+                                "
+                              ></div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              style="
+                                font-size: 0px;
+                                padding: 10px 25px;
+                                padding-right: 16px;
+                                padding-left: 25px;
+                                word-break: break-word;
+                              "
+                            >
+                              <div
+                                style="
+                                  font-family: open Sans Helvetica, Arial, sans-serif;
+                                  font-size: 10px;
+                                  line-height: 1;
+                                  text-align: center;
+                                  color: #000000;
+                                "
+                              >
+                                Best regards,<br /><br />
+                                The HoodHub Team <br /><br />
+                                This is an automated message, please do not reply
+                                to this email.
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              style="
+                                font-size: 0px;
+                                padding: 10px 25px;
+                                padding-right: 25px;
+                                padding-left: 25px;
+                                word-break: break-word;
+                              "
+                            >
+                              <div
+                                style="
+                                  font-family: open Sans Helvetica, Arial, sans-serif;
+                                  font-size: 12px;
+                                  line-height: 1;
+                                  text-align: center;
+                                  color: #000000;
+                                "
+                              >
+                                <p class="copyright">2024 HoodHub. All rights reserved.</p>
+                              </div>
+                            </td>
+                          </tr>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
+
+    `;
+};
+
+export const forgotPasswordEmail = (token: number, firstName: string) => {
+  return `
+    <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <style type="text/css">
+      #outlook a {
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      table,
+      td {
+        border-collapse: collapse;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+
+      p {
+        display: block;
+        margin: 13px 0;
+      }
+      .button-verify {
+        z-index: 1000;
+        cursor: pointer;
+      }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700);
+    </style>
+    <style type="text/css">
+      @media only screen and (min-width: 480px) {
+        .mj-column-per-100 {
+          width: 100% !important;
+          max-width: 100%;
+        }
+      }
+    </style>
+    <style media="screen and (min-width:480px)">
+      .moz-text-html .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    </style>
+    <style type="text/css">
+      @media only screen and (max-width: 480px) {
+        table.mj-full-width-mobile {
+          width: 100% !important;
+        }
+
+        td.mj-full-width-mobile {
+          width: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="word-spacing: normal; background-color: #fafbfc">
+    <div style="background-color: #fafbfc">
+      <div style="margin: 0px auto; max-width: 600px">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%">
+          <tbody>
+            <tr>
+              <td
+                style="
+                  direction: ltr;
+                  font-size: 0px;
+                  padding: 20px 0;
+                  padding-bottom: 20px;
+                  padding-top: 20px;
+                  text-align: center;
+                "
+              >
+                <div
+                  class="mj-column-per-100 mj-outlook-group-fix"
+                  style="
+                    font-size: 0px;
+                    text-align: left;
+                    direction: ltr;
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 100%;
+                  "
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    role="presentation"
+                    style="vertical-align: middle"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td align="center" style="font-size: 0px; word-break: break-word">
+                          <table
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                            role="presentation"
+                            style="border-collapse: collapse; border-spacing: 0px"
+                          >
+                            <tbody>
+                              <tr>
+                                <td style="width: 125px">
+                                  <img
+                                    height="auto"
+                                    src="https://hoodhub.blob.core.windows.net/hoodhub-container/HoodHubFullLogo-1728671229794-.png"
+                                    style="
+                                      border: 0;
+                                      display: block;
+                                      outline: none;
+                                      text-decoration: none;
+                                      height: auto;
+                                      width: 100%;
+                                      font-size: 13px;
+                                    "
+                                    width="125"
+                                  />
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td><p style="color: grey; font-size: 12px">
+                              If you didn't sign up for HoodHub, please ignore this email.
+                            </p>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background: #ffffff; background-color: #ffffff; margin: 0px auto; max-width: 600px">
+        <table
+          align="center"
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          role="presentation"
+          style="background: #ffffff; background-color: #ffffff; width: 100%"
+        >
+          <tbody>
+            <tr>
+              <td
+                style="
+                  direction: ltr;
+                  font-size: 0px;
+                  padding: 20px 0;
+                  padding-bottom: 20px;
+                  padding-top: 20px;
+                  text-align: center;
+                "
+              >
+                <div
+                  class="mj-column-per-100 mj-outlook-group-fix"
+                  style="
+                    font-size: 0px;
+                    text-align: left;
+                    direction: ltr;
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 100%;
+                  "
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    role="presentation"
+                    style="vertical-align: middle"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          align="center"
+                          style="
+                            font-size: 0px;
+                            padding: 10px 25px;
+                            padding-right: 25px;
+                            padding-left: 25px;
+                            word-break: break-word;
+                          "
+                        >
+                          <div
+                            style="
+                              font-family: open Sans Helvetica, Arial, sans-serif;
+                              font-size: 14px;
+                              line-height: 1;
+                              text-align: center;
+                              color: #000000;
+                            "
+                          >
+                            <p style="font-size: 14px">Hi ${firstName},</p>
                           </div>
                         </td>
                       </tr>
@@ -1275,7 +1643,7 @@ export const resendOTPEmail = (token: number, firstName: string) => {
                               color: #000000;
                             "
                           >
-                            <p style="font-size: 14px">Hi, ${firstName}</p>
+                            <p style="font-size: 14px">Hi ${firstName},</p>
                           </div>
                         </td>
                       </tr>

@@ -112,8 +112,20 @@ class GroupService {
     return await GroupRepository.findOneByIdWithGroupRequests(id);
   }
 
-  async getAllGroups(): Promise<IGroup[]> {
-    return await GroupRepository.findAll();
+  async getAllGroups(page: number): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    groups: IGroup[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const groupsAndCount = await GroupRepository.findAll(skip, limit);
+    return {
+      page,
+      totalPages: Math.ceil(groupsAndCount.count / limit),
+      ...groupsAndCount,
+    };
   }
 }
 
