@@ -6,8 +6,13 @@ import {
   IUser,
   IUserData,
   IPoint,
+  NorthLondonCA,
+  SouthLondonCA,
+  EastLondonCA,
+  WestLondonCA,
 } from "../interfaces/user";
 import { UserModel } from "../models/user";
+import { WithinLocationEnum } from "../enum/user";
 
 class UserRepository {
   async create(data: ICreateUser): Promise<IUser> {
@@ -91,12 +96,26 @@ class UserRepository {
     ).select("-password");
   }
 
-  async findAll(): Promise<IUserData[]> {
-    return await UserModel.find({}).select("-password");
+  async deactivateAdmin(id: Types.ObjectId): Promise<IUserData | null> {
+    return await UserModel.findByIdAndUpdate(
+      id,
+      { isAdminDeactivated: true },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    ).select("-password");
   }
 
+  // async findAll(): Promise<IUserData[]> {
+  //   return await UserModel.find({}).select("-password");
+  // }
+
   async findAllAdmins(): Promise<IUserData[]> {
-    return await UserModel.find({ isAdmin: true }).select("-password");
+    return await UserModel.find({
+      isAdmin: true,
+      isAdminDeactivated: false,
+    }).select("-password");
   }
 
   async findById(id: Types.ObjectId): Promise<IUserData | null> {
@@ -133,6 +152,53 @@ class UserRepository {
         },
       },
     }).select("_id username profilePicture geoAddress stringAddress");
+  }
+
+  async findAll(
+    skip: number,
+    limit: number,
+    location?: string
+  ): Promise<{ count: number; users: IUserData[] }> {
+    let query = {};
+
+    if (location) {
+      let mappedLocation;
+
+      switch (location) {
+        case WithinLocationEnum.NorthLondonCA: {
+          mappedLocation = NorthLondonCA;
+          break;
+        }
+        case WithinLocationEnum.SouthLondonCA: {
+          mappedLocation = SouthLondonCA;
+          break;
+        }
+        case WithinLocationEnum.EastLondonCA: {
+          mappedLocation = EastLondonCA;
+          break;
+        }
+        case WithinLocationEnum.WestLondonCA: {
+          mappedLocation = WestLondonCA;
+          break;
+        }
+      }
+
+      let locationQuery = {
+        $geoWithin: {
+          $geometry: mappedLocation,
+        },
+      };
+      // @ts-ignore
+      query.geoAddress = locationQuery;
+    }
+    console.log(query);
+    const count = await UserModel.find(query).countDocuments();
+    const users = await UserModel.find(query)
+      .sort({ createdAt: "desc" })
+      .skip(skip)
+      .limit(limit)
+      .select("-password");
+    return { count, users };
   }
 
   async deletePermanently(id: Types.ObjectId): Promise<IUser | null> {

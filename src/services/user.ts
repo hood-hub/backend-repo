@@ -208,6 +208,14 @@ class UserService {
     resetPasswordToken!.save();
   }
 
+  async deactivateAdmin(id: Types.ObjectId): Promise<IUserData> {
+    let user = await UserRepository.deactivateAdmin(id);
+    if (!user) {
+      ErrorMiddleware.errorHandler("User not found!", 404);
+    }
+    return user;
+  }
+
   async getOneUser(id: Types.ObjectId): Promise<IUserData | null> {
     return await UserRepository.findById(id);
   }
@@ -223,8 +231,23 @@ class UserService {
     );
   }
 
-  async getAllUsers(): Promise<IUserData[]> {
-    return await UserRepository.findAll();
+  async getAllUsers(
+    page: number,
+    location?: string
+  ): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    users: IUserData[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const usersAndCount = await UserRepository.findAll(skip, limit, location);
+    return {
+      page,
+      totalPages: Math.ceil(usersAndCount.count / limit),
+      ...usersAndCount,
+    };
   }
 
   async getAllAdmins(): Promise<IUserData[]> {

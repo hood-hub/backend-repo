@@ -84,6 +84,29 @@ class MessageService {
       ...messagesAndCount,
     };
   }
+
+  async getDirectMessagesForUser(
+    userId: Types.ObjectId,
+    page: number
+  ): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    dms: IDirectMessage[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const dmsAndCount = await MessageRepository.findDirectMessagesForUser(
+      userId,
+      skip,
+      limit
+    );
+    return {
+      page,
+      totalPages: Math.ceil(dmsAndCount.count / limit),
+      ...dmsAndCount,
+    };
+  }
 }
 
 export default new MessageService();

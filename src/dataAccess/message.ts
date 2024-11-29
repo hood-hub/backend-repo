@@ -102,6 +102,31 @@ class MessageRepository {
       });
     return { count, messages };
   }
+
+  async findDirectMessagesForUser(
+    userId: Types.ObjectId,
+    skip: number,
+    limit: number
+  ): Promise<{ count: number; dms: IDirectMessage[] }> {
+    const count = await DirectMessageModel.find({
+      $or: [{ firstParty: userId }, { secondParty: userId }],
+    }).countDocuments();
+    const dms = await DirectMessageModel.find({
+      $or: [{ firstParty: userId }, { secondParty: userId }],
+    })
+      .sort({ createdAt: "desc" })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "firstParty",
+        select: "username profilePicture",
+      })
+      .populate({
+        path: "secondParty",
+        select: "username profilePicture",
+      });
+    return { count, dms };
+  }
 }
 
 export default new MessageRepository();

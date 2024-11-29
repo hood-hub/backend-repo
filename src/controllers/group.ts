@@ -107,7 +107,7 @@ export default class GroupController {
 
       const group = await GroupService.approveRequestToJoinPrivateGroup(
         req.params.id as unknown as Types.ObjectId,
-        req.body.user._id
+        req.body.userId
       );
       return res.status(200).json({
         success: true,
@@ -251,6 +251,27 @@ export default class GroupController {
     try {
       const page = req.query.page ? req.query.page : 1;
       const groups = await GroupService.getAllGroups(page as unknown as number);
+      return res.status(200).json({
+        success: true,
+        message: "Groups retrieved successfully!",
+        data: groups,
+      });
+    } catch (ex) {
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async getGroupsForUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const page = req.query.page ? req.query.page : 1;
+      const groups = await GroupService.getGroupsForUser(
+        page as unknown as number,
+        req.body.user._id
+      );
       return res.status(200).json({
         success: true,
         message: "Groups retrieved successfully!",

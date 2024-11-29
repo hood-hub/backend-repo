@@ -33,8 +33,8 @@ export default class UserValidator {
       lastName: Joi.string().min(2),
       username: Joi.string().min(2),
       profilePicture: Joi.string(),
-      stringAddress: Joi.string().required(),
-      geoAddress: Joi.any().required(),
+      stringAddress: Joi.string(),
+      geoAddress: Joi.any(),
     });
   }
 

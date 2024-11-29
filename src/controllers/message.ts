@@ -118,7 +118,7 @@ export default class MessageController {
       if (!req.params.id) {
         return res.status(400).json({
           success: false,
-          message: "Kindly pass group id!",
+          message: "Kindly pass direct message id!",
         });
       }
       const page = req.query.page ? req.query.page : 1;
@@ -155,6 +155,27 @@ export default class MessageController {
         success: true,
         message: "Message retrieved successfully!",
         data: message,
+      });
+    } catch (ex) {
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
+  async getDirectMessagesForUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const page = req.query.page ? req.query.page : 1;
+      const dms = await MessageService.getDirectMessagesForUser(
+        req.body.user._id as unknown as Types.ObjectId,
+        page as unknown as number
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Direct Messages retrieved successfully!",
+        data: dms,
       });
     } catch (ex) {
       ErrorMiddleware.serverError(res, ex);

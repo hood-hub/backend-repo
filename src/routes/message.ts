@@ -38,4 +38,9 @@ router.get("/get-by-direct-message/:id", [
   messageController.getByDirectMessage,
 ]);
 
+router.get("/get-my-direct-messages/", [
+  ValidateLogin,
+  messageController.getDirectMessagesForUser,
+]);
+
 export default router;

@@ -54,7 +54,7 @@ class GroupRepository {
     return await GroupModel.findByIdAndUpdate(
       id,
       {
-        $pop: { groupRequests: userId },
+        $pull: { groupRequests: userId },
         $push: { members: userId },
         $inc: { noOfMembers: 1 },
       },
@@ -101,6 +101,10 @@ class GroupRepository {
       .select("-groupRequests");
   }
 
+  async findOneByIdUnpopulated(id: Types.ObjectId): Promise<IGroup> {
+    return await GroupModel.findById(id);
+  }
+
   async findOneByIdWithGroupRequests(id: Types.ObjectId): Promise<IGroup> {
     return await GroupModel.findById(id).populate([
       {
@@ -116,6 +120,27 @@ class GroupRepository {
   ): Promise<{ count: number; groups: IGroup[] }> {
     const count = await GroupModel.find({ isDeleted: false }).countDocuments();
     const groups = await GroupModel.find({ isDeleted: false })
+      .select("-groupRequests")
+      .sort({ createdAt: "desc" })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "members",
+        select: "profilePicture",
+      });
+    return { count, groups };
+  }
+
+  async findGroupByMember(
+    userId: Types.ObjectId,
+    skip: number,
+    limit: number
+  ): Promise<{ count: number; groups: IGroup[] }> {
+    const count = await GroupModel.find({
+      members: userId,
+      isDeleted: false,
+    }).countDocuments();
+    const groups = await GroupModel.find({ members: userId, isDeleted: false })
       .select("-groupRequests")
       .sort({ createdAt: "desc" })
       .skip(skip)

@@ -60,4 +60,9 @@ router.get("/get-group-requests/:id", [
   groupController.getGroupRequests,
 ]);
 
+router.get("/get-my-groups/", [
+  ValidateLogin,
+  groupController.getGroupsForUser,
+]);
+
 export default router;

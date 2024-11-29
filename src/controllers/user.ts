@@ -201,6 +201,22 @@ export default class UserController {
     }
   }
 
+  async deactivateAdmin(req: Request, res: Response): Promise<any> {
+    try {
+      const user = await UserService.deactivateAdmin(
+        req.params.id as unknown as Types.ObjectId
+      );
+      return res.status(201).json({
+        success: true,
+        message: "Admin deactivated successfully!",
+        data: user,
+      });
+    } catch (ex) {
+      console.log(ex);
+      ErrorMiddleware.serverError(res, ex);
+    }
+  }
+
   async getOneUser(
     req: Request,
     res: Response,
@@ -253,8 +269,12 @@ export default class UserController {
     next: NextFunction
   ): Promise<any> {
     try {
-      // const distance = req.query.distance ? Number(req.query.distance) : 20;
-      const users = await UserService.getAllUsers();
+      const location = req.query.location ? req.query.location : "";
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const users = await UserService.getAllUsers(
+        page,
+        location as unknown as string
+      );
       return res.status(200).json({
         success: true,
         message: "Users retrieved successfully!",

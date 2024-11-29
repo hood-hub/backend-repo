@@ -135,7 +135,12 @@ class PostRepository {
     })
       .sort({ createdAt: "desc" })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate({
+        path: "userId",
+        select:
+          "username profilePicture email noOfFlags createdAt firstName lastName",
+      });
     return { count, pendingCount, resolvedCount, posts };
   }
 
@@ -144,6 +149,16 @@ class PostRepository {
     skip: number,
     limit: number
   ): Promise<{ count: number; posts: IPost[] }> {
+    const count = await PostModel.find({
+      geoAddress: {
+        $near: {
+          $geometry: userAddress,
+          $maxDistance: 20000, // Distance in meters
+        },
+      },
+      isDeleted: false,
+      isFlaggedRemoved: false,
+    }).countDocuments();
     const posts = await PostModel.find({
       geoAddress: {
         $near: {
@@ -161,7 +176,7 @@ class PostRepository {
         path: "userId",
         select: "username profilePicture",
       });
-    return { count: posts.length, posts };
+    return { count, posts };
   }
 
   async findAll(

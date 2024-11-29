@@ -86,3 +86,62 @@ export interface IToken extends Document {
   token: number;
   isDeleted: Boolean;
 }
+
+export const NorthLondonCA = {
+  type: "Polygon",
+  coordinates: [
+    [
+      [-81.183, 43.0383],
+      [-81.328, 43.0383],
+      [-81.328, 42.975],
+      [-81.183, 42.975],
+      [-81.183, 43.0383],
+    ],
+  ],
+};
+
+export const SouthLondonCA = {
+  type: "Polygon",
+  coordinates: [
+    [
+      [-81.183, 42.941],
+      [-81.328, 42.941],
+      [-81.328, 42.87],
+      [-81.183, 42.87],
+      [-81.183, 42.941],
+    ],
+  ],
+};
+
+export const EastLondonCA = {
+  type: "Polygon",
+  coordinates: [
+    [
+      [-81.183, 42.998],
+      [-81.3, 42.998],
+      [-81.3, 42.93],
+      [-81.183, 42.93],
+      [-81.183, 42.998],
+    ],
+  ],
+};
+
+export const WestLondonCA = {
+  type: "Polygon",
+  coordinates: [
+    [
+      [-81.328, 43.03],
+      [-81.42, 43.03],
+      [-81.42, 42.965],
+      [-81.328, 42.965],
+      [-81.328, 43.03],
+    ],
+  ],
+};
+
+/**
+ * Convention is:
+ * NE
+ * NW
+ * SW
+ * SE */

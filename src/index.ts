@@ -18,6 +18,8 @@ if (secret) {
   );
 }
 
+app.use(cors());
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());

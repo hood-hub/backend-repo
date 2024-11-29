@@ -88,6 +88,11 @@ router.post("/admin", [
   userController.signupAdmin,
 ]);
 
+router.put("/admin/deactivate-admin/:id", [
+  ValidateLogin,
+  userController.deactivateAdmin,
+]);
+
 router.get("/admin/get-all", [ValidateLogin, userController.getAllAdmins]);
 
 router.get("/logout", [ValidateLogin, userController.logout]);

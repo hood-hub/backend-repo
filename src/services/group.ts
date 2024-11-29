@@ -48,7 +48,7 @@ class GroupService {
         404
       );
     }
-    let group = await this.getOneById(id);
+    let group = await GroupRepository.findOneByIdUnpopulated(id);
     if (group.members.includes(userId)) {
       ErrorMiddleware.errorHandler("User is already a member!", 400);
     }
@@ -67,7 +67,7 @@ class GroupService {
         404
       );
     }
-    let group = await this.getOneById(id);
+    let group = await GroupRepository.findOneByIdUnpopulated(id);
     if (group.members.includes(userId)) {
       ErrorMiddleware.errorHandler("User is already a member!", 400);
     }
@@ -121,6 +121,29 @@ class GroupService {
     const limit = 20;
     const skip = (page - 1) * limit;
     const groupsAndCount = await GroupRepository.findAll(skip, limit);
+    return {
+      page,
+      totalPages: Math.ceil(groupsAndCount.count / limit),
+      ...groupsAndCount,
+    };
+  }
+
+  async getGroupsForUser(
+    page: number,
+    userId: Types.ObjectId
+  ): Promise<{
+    page: number;
+    totalPages: number;
+    count: number;
+    groups: IGroup[];
+  }> {
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    const groupsAndCount = await GroupRepository.findGroupByMember(
+      userId,
+      skip,
+      limit
+    );
     return {
       page,
       totalPages: Math.ceil(groupsAndCount.count / limit),
